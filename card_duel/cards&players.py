@@ -11,6 +11,15 @@ class Player:
         self.cards = []
         self.live_cards = []
         self.is_ai = is_ai
+        if is_ai:
+            self.ai = Qlearning()
+
+    def draw_cards(self):
+        self.cards = [Card() for _ in range(3)]
+
+    def play_card(self, i, pos):
+        card = self.cards.pop(i)
+        return pos, card
 
 class Qlearning:
     def __init__(self):
