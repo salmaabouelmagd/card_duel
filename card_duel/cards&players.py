@@ -39,15 +39,17 @@ class Qlearning:
         else:
             return max(self.q_table[state], key = self.q_table[state].get)
     
-    def update_qtable(self, state, action, reward, next_state):
-        if state not in self.q_table:
-            self.q_table[state] = {}
-        if next_state not in self.q_table:
-            self.q_table[next_state] = {}
-        old_value = self.q_table[state].get(action, 0)
-        next_max = max(self.q_table[next_state].values()) if self.q_table[next_state] else 0
-        new_value = (1 - self.learning_rate) * old_value + self.learning_rate * (reward + self.discount * next_max)
-        self.q_table[state][action] = new_value
+    def update_qtable(self, player, opponent, state):
+        reward = self.get_reward(player, opponent)
+        if self.last_state is not None and self.last_action is not None:
+            if self.last_state not in self.q_table:
+                self.q_table[self.last_state] = {}
+            if state not in self.q_table:
+                self.q_table[state] = {}
+            old_value = self.q_table[self.last_state].get(self.last_action, 0)
+            next_max = max(self.q_table[state].values()) if self.q_table[state] else 0
+            new_value = (1 - self.learning_rate) * old_value + self.learning_rate * (reward + self.discount * next_max)
+            self.q_table[self.last_state][self.last_action] = new_value
 
     def rewards(self, player, opponent):
         reward = 0
