@@ -40,7 +40,7 @@ class Qlearning:
             return max(self.q_table[state], key = self.q_table[state].get)
     
     def update_qtable(self, player, opponent, state):
-        reward = self.get_reward(player, opponent)
+        reward = self.rewards(player, opponent)
         if self.last_state is not None and self.last_action is not None:
             if self.last_state not in self.q_table:
                 self.q_table[self.last_state] = {}
@@ -61,3 +61,40 @@ class Qlearning:
             reward += 50
 
         return reward
+    
+class Game:
+    def __init__(self, player1, player2):
+        self.players = [player1, player2]
+        self.board = [None, None, None]
+
+    def play_round(self):
+        for player in self.players:
+            player.draw_cards()
+            for _ in range(3):
+                if player.cards and None in self.board:
+                    if player.is_ai:
+                        state = tuple(card.health for card in player.cards) + tuple(card.health if card else 0 for card in self.board)
+                        action = player.ai.get_action(state, self.board)
+                        position, card_numbers = action
+                        opponent = self.players[0] if player.number == "player 2" else self.players[1]
+                        reward = player.ai.rewards(player, opponent)
+                        player.ai.update_qtable(reward, state)
+                        player.ai.last_state = state
+                        player.ai.last_action = action
+                    else:
+                        print(f"{player.number}, here are your cards:")
+                        for i, card in enumerate(player.cards):
+                            print(f"card {i}: health = {card.health}, attack = {card.attack}")
+                        print("the board:")
+                        for i, card in enumerate(self.board):
+                            if card:
+                                print(f"position {i}: card with health = {card.health}, attack = {card.attack}")
+                            else:
+                                print(f"position {i}: empty")
+                        card_numbers = int(input("enter the card number: "))
+                        position = int(input("enter the position number to place the card(0. 1, or 2)"))
+                    if self.board[position] is None:
+                        position, card = player.play_card(card_numbers, position)
+                        self.board[position] = card
+                    
+                    
