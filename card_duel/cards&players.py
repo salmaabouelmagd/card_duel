@@ -63,7 +63,7 @@ class Qlearning:
 class Game:
     def __init__(self, player1, player2):
         self.players = [player1, player2]
-        self.board = [None, None, None]
+        self.board = [None] * 6
 
     def play_round(self):
         for player in self.players:
