@@ -69,16 +69,21 @@ class Game:
         for player in self.players:
             player.draw_cards()
             for _ in range(3):
-                if player.cards and None in self.board:
+                if player.cards:
                     if player.is_ai:
                         state = tuple(card.health for card in player.cards) + tuple(card.health if card else 0 for card in self.board)
                         action = player.ai.actions(state, self.board)
                         position, card_numbers = action
-                        opponent = self.players[0] if player.number == "player 2" else self.players[1]
-                        reward = player.ai.rewards(player, opponent)
-                        player.ai.update_qtable(reward, state)
-                        player.ai.next_state = state
-                        player.ai.next_action = action
+                        if position in range(3, 6) and card_numbers in range(len(player.cards)):
+                            opponent = self.players[0] if player.number == "player 2" else self.players[1]
+                            reward = player.ai.rewards(player, opponent)
+                            player.ai.update_qtable(reward, state)
+                            player.ai.next_state = state
+                            player.ai.next_action = action
+                            print(f"{player.number} (AI) placed card {card_numbers} at position {position}")
+                            position, card = player.play_card(card_numbers, position)
+                            self.board[position] = card
+                            self.print_board()
                     else:
                         print(f"{player.number}, here are your cards:")
                         for i, card in enumerate(player.cards):
@@ -91,10 +96,14 @@ class Game:
                                 print(f"position {i}: empty")
                         card_numbers = int(input("enter the card number: "))
                         position = int(input("enter the position number to place the card(0. 1, or 2)"))
-                    if self.board[position] is None:
-                        position, card = player.play_card(card_numbers, position)
-                        self.board[position] = card
-            self.resolve_round()
+                        if position not in range(3):
+                            print("Invalid position. Please choose a position between 0 and 2.")
+                            continue
+                        if card_numbers in range(len(player.cards)):
+                            position, card = player.play_card(card_numbers, position)
+                            self.board[position] = card
+                            self.print_board()
+        self.resolve_round()
                     
     def resolve_round(self):
         for i in range(3):
