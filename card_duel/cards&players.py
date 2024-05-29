@@ -121,6 +121,14 @@ class Game:
             self.players[i // 3].live_cards.append(self.board[i])
             self.board[i] = None
 
+    def print_board(self):
+        print("Current board state:")
+        for i, card in enumerate(self.board):
+            if card:
+                print(f"Position {i}: Card with health = {card.health}, attack = {card.attack}")
+            else:
+                print(f"Position {i}: Empty")
+
     def end_game(self):
         while len(self.players[0].live_cards) < 5 and len(self.players[1].live_cards) < 5:
             self.play_round()
