@@ -96,5 +96,17 @@ class Game:
                     if self.board[position] is None:
                         position, card = player.play_card(card_numbers, position)
                         self.board[position] = card
+            self.play_round()
                     
-                    
+    def play_round(self):
+        for i in range(3):
+            if self.board[i]:
+                opponent_index = (i + 1) % 3
+                if self.board[opponent_index]:
+                    self.board[i].health -= self.board[opponent_index].attack
+                    if self.board[i].health <= 0:
+                        self.board[i] = None
+        for i in range(3):
+            if self.board[i]:
+                self.players[i % 2].live_cards.append(self.board[i])
+                self.board[i] = None
