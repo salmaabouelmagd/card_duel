@@ -39,8 +39,7 @@ class Qlearning:
         else:
             return max(self.q_table[state], key = self.q_table[state].get)
     
-    def update_qtable(self, player, opponent, state):
-        reward = self.rewards(player, opponent)
+    def update_qtable(self, reward, state):
         if self.next_state is not None and self.next_action is not None:
             if self.next_state not in self.q_table:
                 self.q_table[self.next_state] = {}
@@ -59,7 +58,6 @@ class Qlearning:
             reward += 10
         if len(player.live_cards) >= 5:
             reward += 50
-
         return reward
     
 class Game:
