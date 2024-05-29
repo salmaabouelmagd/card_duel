@@ -24,8 +24,8 @@ class Player:
 class Qlearning:
     def __init__(self):
         self.q_table = {}
-        self.learning_rate = 0.1
-        self.discount = 0.9
+        self.learning_rate = 0.6
+        self.discount = 0.7
         self.epsilon = 0.1
         self.next_state = None
         self.next_action = None
