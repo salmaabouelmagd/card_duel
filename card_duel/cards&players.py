@@ -96,9 +96,9 @@ class Game:
                     if self.board[position] is None:
                         position, card = player.play_card(card_numbers, position)
                         self.board[position] = card
-            self.play_round()
+            self.resolve_round()
                     
-    def play_round(self):
+    def resolve_round(self):
         for i in range(3):
             if self.board[i]:
                 opponent_index = (i + 1) % 3
@@ -110,3 +110,9 @@ class Game:
             if self.board[i]:
                 self.players[i % 2].live_cards.append(self.board[i])
                 self.board[i] = None
+
+    def end_game(self):
+        while len(self.player[0].live_cards) < 5 and len(self.player[1].live_cards) < 5:
+            self.resolve_round()
+        for player in self.players:
+            print(f"{player.number} has {len(player.live_cards)} surviving cards")
