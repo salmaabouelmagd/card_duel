@@ -74,7 +74,7 @@ class Game:
                 if player.cards and None in self.board:
                     if player.is_ai:
                         state = tuple(card.health for card in player.cards) + tuple(card.health if card else 0 for card in self.board)
-                        action = player.ai.get_action(state, self.board)
+                        action = player.ai.actions(state, self.board)
                         position, card_numbers = action
                         opponent = self.players[0] if player.number == "player 2" else self.players[1]
                         reward = player.ai.rewards(player, opponent)
