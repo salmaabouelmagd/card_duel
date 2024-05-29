@@ -112,7 +112,7 @@ class Game:
                 self.board[i] = None
 
     def end_game(self):
-        while len(self.player[0].live_cards) < 5 and len(self.player[1].live_cards) < 5:
+        while len(self.players[0].live_cards) < 5 and len(self.players[1].live_cards) < 5:
             self.resolve_round()
         for player in self.players:
             print(f"{player.number} has {len(player.live_cards)} surviving cards")
