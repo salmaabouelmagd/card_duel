@@ -116,3 +116,9 @@ class Game:
             self.resolve_round()
         for player in self.players:
             print(f"{player.number} has {len(player.live_cards)} surviving cards")
+
+# main:
+player1 = Player("player 1")
+player2 = Player("player 2")
+game = Game(player1, player2)
+game.end_game()
