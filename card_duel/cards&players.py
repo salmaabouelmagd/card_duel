@@ -2,7 +2,7 @@ import random
 
 class Card:
     def __init__(self):
-        self. health = random.randint(1, 9)
+        self.health = random.randint(1, 9)
         self.attack = random.randint(1, 9)
 
 class Player:
