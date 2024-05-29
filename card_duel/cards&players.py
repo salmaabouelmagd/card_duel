@@ -106,17 +106,20 @@ class Game:
         self.resolve_round()
                     
     def resolve_round(self):
-        for i in range(3):
-            if self.board[i]:
-                opponent_index = (i + 1) % 3
-                if self.board[opponent_index]:
-                    self.board[i].health -= self.board[opponent_index].attack
-                    if self.board[i].health <= 0:
-                        self.board[i] = None
-        for i in range(3):
-            if self.board[i]:
-                self.players[i % 2].live_cards.append(self.board[i])
-                self.board[i] = None
+     for i in range(3):
+        player_index = i
+        opponent_index = i + 3
+        if self.board[player_index] and self.board[opponent_index]:
+            self.board[opponent_index].health -= self.board[player_index].attack
+            self.board[player_index].health -= self.board[opponent_index].attack
+            if self.board[player_index].health <= 0:
+                self.board[player_index] = None
+            if self.board[opponent_index].health <= 0:
+                self.board[opponent_index] = None
+     for i in range(6):
+        if self.board[i]:
+            self.players[i // 3].live_cards.append(self.board[i])
+            self.board[i] = None
 
     def end_game(self):
         while len(self.players[0].live_cards) < 5 and len(self.players[1].live_cards) < 5:
