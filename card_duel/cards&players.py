@@ -31,11 +31,14 @@ class Qlearning:
     def actions(self, state, board):
         empty_positions = [i for i, pos in enumerate(board) if pos is None]
         if not empty_positions:
-            return random.choice(empty_positions), random.choice(random(len(state)))
+            return random.choice(range(3)), random.choice(range(len(state)))
+        
+        if state not in self.q_table or random.random() < self.epsilon:
+            return random.choice(empty_positions), random.choice(range(len(state)))
         else:
             return max(self.q_table[state], key = self.q_table[state].get)
     
-    def update_table(self, state, action, reward, next_state):
+    def update_qtable(self, state, action, reward, next_state):
         if state not in self.q_table:
             self.q_table[state] = {}
         if next_state not in self.q_table:
