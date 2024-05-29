@@ -27,8 +27,8 @@ class Qlearning:
         self.learning_rate = 0.1
         self.discount = 0.9
         self.epsilon = 0.1
-        self.last_state = None
-        self.last_action = None
+        self.next_state = None
+        self.next_action = None
     
     def actions(self, state, board):
         empty_positions = [i for i, pos in enumerate(board) if pos is None]
@@ -41,15 +41,15 @@ class Qlearning:
     
     def update_qtable(self, player, opponent, state):
         reward = self.rewards(player, opponent)
-        if self.last_state is not None and self.last_action is not None:
-            if self.last_state not in self.q_table:
-                self.q_table[self.last_state] = {}
+        if self.next_state is not None and self.next_action is not None:
+            if self.next_state not in self.q_table:
+                self.q_table[self.next_state] = {}
             if state not in self.q_table:
                 self.q_table[state] = {}
-            old_value = self.q_table[self.last_state].get(self.last_action, 0)
+            old_value = self.q_table[self.next_state].get(self.next_action, 0)
             next_max = max(self.q_table[state].values()) if self.q_table[state] else 0
             new_value = (1 - self.learning_rate) * old_value + self.learning_rate * (reward + self.discount * next_max)
-            self.q_table[self.last_state][self.last_action] = new_value
+            self.q_table[self.next_state][self.next_action] = new_value
 
     def rewards(self, player, opponent):
         reward = 0
@@ -79,8 +79,8 @@ class Game:
                         opponent = self.players[0] if player.number == "player 2" else self.players[1]
                         reward = player.ai.rewards(player, opponent)
                         player.ai.update_qtable(reward, state)
-                        player.ai.last_state = state
-                        player.ai.last_action = action
+                        player.ai.next_state = state
+                        player.ai.next_action = action
                     else:
                         print(f"{player.number}, here are your cards:")
                         for i, card in enumerate(player.cards):
